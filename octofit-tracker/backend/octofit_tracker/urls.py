@@ -24,7 +24,7 @@ def api_root(request, format=None):
     if codespace_name:
         base_url = f"https://{codespace_name}-8000.app.github.dev/api/"
     else:
-        base_url = "/api/"
+        base_url = "http://localhost:8000/api/"
     return JsonResponse({
         'users': base_url + 'users/',
         'teams': base_url + 'teams/',
