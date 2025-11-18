@@ -16,13 +16,29 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from octofit_tracker import views
+import os
+from django.http import JsonResponse
+
+def api_root(request, format=None):
+    codespace_name = os.environ.get('CODESPACE_NAME', '')
+    if codespace_name:
+        base_url = f"https://{codespace_name}-8000.app.github.dev/api/"
+    else:
+        base_url = "/api/"
+    return JsonResponse({
+        'users': base_url + 'users/',
+        'teams': base_url + 'teams/',
+        'activities': base_url + 'activities/',
+        'workouts': base_url + 'workouts/',
+        'leaderboard': base_url + 'leaderboard/',
+    })
 
 urlpatterns = [
-    path('', views.api_root, name='api-root'),
+    path('', api_root, name='api-root'),
     path('admin/', admin.site.urls),
-    path('users/', views.users_list, name='users-list'),
-    path('teams/', views.teams_list, name='teams-list'),
-    path('activities/', views.activities_list, name='activities-list'),
-    path('workouts/', views.workouts_list, name='workouts-list'),
-    path('leaderboard/', views.leaderboard_list, name='leaderboard-list'),
+    path('api/users/', views.users_list, name='users-list'),
+    path('api/teams/', views.teams_list, name='teams-list'),
+    path('api/activities/', views.activities_list, name='activities-list'),
+    path('api/workouts/', views.workouts_list, name='workouts-list'),
+    path('api/leaderboard/', views.leaderboard_list, name='leaderboard-list'),
 ]
